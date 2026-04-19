@@ -29,12 +29,26 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
     z-index: 10;
     overflow: hidden;
+  }
+
+  /* Scrollable inner wrapper — keeps popup centered when it fits,
+     lets user scroll when content is taller than viewport. */
+  .scene-scroll {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    padding:
+      calc(50px + env(safe-area-inset-top, 0px))
+      calc(20px + env(safe-area-inset-right, 0px))
+      calc(30px + env(safe-area-inset-bottom, 0px))
+      calc(20px + env(safe-area-inset-left, 0px));
+    z-index: 3;
   }
 
   /* Corner stencil watermarks for atmosphere */
@@ -93,7 +107,7 @@
     background: #d9c99b;
     color: #1a2610;
     border-radius: 2px;
-    padding: 38px 28px 26px;
+    padding: clamp(28px, 6vw, 38px) clamp(18px, 5vw, 28px) clamp(20px, 5vw, 26px);
     max-width: 440px;
     width: 100%;
     text-align: center;
@@ -105,6 +119,8 @@
     z-index: 5;
     opacity: 0;
     animation: bounce-in 0.8s cubic-bezier(0.18, 1.25, 0.4, 1.1) forwards;
+    margin: auto;       /* centers vertically when it fits; top-aligns when it overflows */
+    flex-shrink: 0;     /* don't let flex squish the popup */
   }
   @keyframes bounce-in {
     0%   { transform: scale(0.3); opacity: 0; }
@@ -117,13 +133,13 @@
     content: "CLASSIFIED";
     position: absolute;
     top: 22px;
-    right: -52px;
-    width: 200px;
+    right: clamp(-52px, -12vw, -32px);
+    width: clamp(160px, 50vw, 200px);
     background: #8b1a1a;
     color: #fff;
     font-family: 'Black Ops One', cursive;
-    font-size: 13px;
-    letter-spacing: 4px;
+    font-size: clamp(10px, 3vw, 13px);
+    letter-spacing: clamp(2px, 1vw, 4px);
     padding: 5px 0;
     text-align: center;
     transform: rotate(45deg);
@@ -633,35 +649,37 @@
   <div class="stencil-mark bl" aria-hidden="true">DO NOT COPY</div>
   <div class="stencil-mark br" aria-hidden="true">★ EYES ONLY ★</div>
 
-  <div class="popup">
-    <div class="gift-icon" aria-hidden="true">🎖️</div>
-    <span class="flag">★ WINNER CONFIRMED ★</span>
-    <h1>Mission Accomplished</h1>
-    <p class="subtitle">Soldier, your service number has been drawn from <strong>55 recruits</strong>. You have earned the grand prize.</p>
+  <div class="scene-scroll">
+    <div class="popup">
+      <div class="gift-icon" aria-hidden="true">🎖️</div>
+      <span class="flag">★ WINNER CONFIRMED ★</span>
+      <h1>Mission Accomplished</h1>
+      <p class="subtitle">Soldier, your service number has been drawn from <strong>55 recruits</strong>. You have earned the grand prize.</p>
 
-    <div class="prize-box">
-      <div class="prize-icon" aria-hidden="true">📦</div>
-      <div class="prize-label">Grand Prize</div>
-      <div class="prize-name">Mystery Supply Crate</div>
-      <div class="prize-value">EST. VALUE: $1,000+</div>
+      <div class="prize-box">
+        <div class="prize-icon" aria-hidden="true">📦</div>
+        <div class="prize-label">Grand Prize</div>
+        <div class="prize-name">Mystery Supply Crate</div>
+        <div class="prize-value">EST. VALUE: $1,000+</div>
+      </div>
+
+      <div class="timer">
+        ⏱ CLAIM WINDOW CLOSES IN
+        <span class="timer-clock" id="timer">02:59</span>
+      </div>
+
+      <!-- The button: a real <a href="#"> is the single most reliable tappable
+           element in every mobile browser including WhatsApp's WKWebView. -->
+      <a href="#claim" class="claim-btn" id="claim-btn" role="button">▶ Claim Reward ◀</a>
+
+      <div class="checkmarks">
+        <span>Authorized</span>
+        <span>Verified</span>
+        <span>Urgent</span>
+      </div>
+
+      <p class="fine-print">* Prize release authorized by Cmd. G. Winkler, 447th Recruitment Div. Winner must provide credit card, social security number, and next of kin for processing. By claiming you agree to terms and conditions redacted by order of Section 7. This transmission will self-destruct in [REDACTED].</p>
     </div>
-
-    <div class="timer">
-      ⏱ CLAIM WINDOW CLOSES IN
-      <span class="timer-clock" id="timer">02:59</span>
-    </div>
-
-    <!-- The button: a real <a href="#"> is the single most reliable tappable
-         element in every mobile browser including WhatsApp's WKWebView. -->
-    <a href="#claim" class="claim-btn" id="claim-btn" role="button">▶ Claim Reward ◀</a>
-
-    <div class="checkmarks">
-      <span>Authorized</span>
-      <span>Verified</span>
-      <span>Urgent</span>
-    </div>
-
-    <p class="fine-print">* Prize release authorized by Cmd. G. Winkler, 447th Recruitment Div. Winner must provide credit card, social security number, and next of kin for processing. By claiming you agree to terms and conditions redacted by order of Section 7. This transmission will self-destruct in [REDACTED].</p>
   </div>
 </div>
 
